@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
 
 import { getEntryBySlug, type ContentCollection } from "@/lib/content";
-import { Breadcrumb, Tag, VlanTrunkLine } from "@/components/ui";
+import { Breadcrumb, ContentRails, Tag, VlanTrunkLine } from "@/components/ui";
 
 const COLLECTION_LABEL: Record<ContentCollection, string> = {
   activities: "活動記録",
@@ -25,7 +25,8 @@ export function ContentDetail({
   const entry = getDetailEntry(collection, slug);
 
   return (
-    <article className="mx-auto w-full max-w-reading px-5 py-12 sm:px-8 lg:py-20">
+    <ContentRails className="mx-auto w-full max-w-reading">
+    <article className="px-5 py-12 sm:px-8 lg:py-20">
       <Breadcrumb items={[{ label: COLLECTION_LABEL[collection], href: `/${collection}` }, { label: entry.frontmatter.title }]} />
 
       <header className="mt-8 border-b border-line pb-10">
@@ -58,5 +59,6 @@ export function ContentDetail({
         <MDXRemote source={entry.source} />
       </div>
     </article>
+    </ContentRails>
   );
 }

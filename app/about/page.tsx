@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { PageHeading } from "@/components/ui";
+import { ContentRails, PageHeading } from "@/components/ui";
 
 export const metadata: Metadata = {
   title: "私たちについて",
@@ -12,7 +12,7 @@ export default function AboutPage() {
   return (
     <div className="mx-auto w-full max-w-site px-5 py-12 sm:px-8 lg:px-12 lg:py-20">
       <PageHeading eyebrow="01 / ABOUT" title="私たちについて" />
-      <div className="max-w-reading lg:ml-auto">
+      <ContentRails className="max-w-reading mx-auto">
 
       <section className="mt-12 border-t border-line pt-8">
         <h2 className="text-2xl">ミッション</h2>
@@ -54,7 +54,7 @@ export default function AboutPage() {
           ページも参照。
         </p>
       </section>
-      </div>
+      </ContentRails>
     </div>
   );
 }

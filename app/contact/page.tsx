@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { PageHeading } from "@/components/ui";
+import { ContentRails, PageHeading } from "@/components/ui";
 
 export const metadata: Metadata = {
   title: "お問い合わせ",
@@ -16,11 +16,13 @@ export default function ContactPage() {
       </p>
       </PageHeading>
 
-      <section className="mt-12 max-w-reading border border-dashed border-line bg-surface p-6 text-sm text-muted lg:ml-auto">
-        TODO(sigint): お問い合わせフォームは外部サービス（Google フォーム等）
-        に委譲する方針。フォームのURL確定後、ここに埋め込みリンクを設置する。
-        代替の連絡先（メールアドレス・SNSアカウント等）があれば併記する。
-      </section>
+      <ContentRails className="mt-12 max-w-reading mx-auto">
+        <section className="border border-dashed border-line bg-surface p-6 text-sm text-muted">
+          TODO(sigint): お問い合わせフォームは外部サービス（Google フォーム等）
+          に委譲する方針。フォームのURL確定後、ここに埋め込みリンクを設置する。
+          代替の連絡先（メールアドレス・SNSアカウント等）があれば併記する。
+        </section>
+      </ContentRails>
     </div>
   );
 }

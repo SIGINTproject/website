@@ -1,12 +1,10 @@
 import Link from "next/link";
-import { VlanTrunkLine } from "./vlan-trunk-line";
 
 export function SiteFooter() {
   return (
     <footer className="border-t border-line bg-surface">
       <div className="mx-auto max-w-site px-5 py-12 sm:px-8 lg:px-12 lg:py-16">
-        <VlanTrunkLine label="VLAN 10" />
-        <div className="mt-10 grid gap-10 md:grid-cols-[1fr_2fr]">
+        <div className="grid gap-10 md:grid-cols-[1fr_2fr]">
           <div>
             <Link href="/" className="font-label text-xl font-semibold tracking-[0.12em]">SIGINT</Link>
             <p className="mt-2 text-sm text-muted">芝浦工業大学 ネットワーク研究会</p>

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { PageHeading } from "@/components/ui";
+import { ContentRails, PageHeading } from "@/components/ui";
 
 export const metadata: Metadata = {
   title: "入部案内",
@@ -32,7 +32,7 @@ export default function JoinPage() {
         基礎から学べる環境があります。
       </p>
       </PageHeading>
-      <div className="max-w-reading lg:ml-auto">
+      <ContentRails className="max-w-reading mx-auto">
 
       <section className="mt-12 border-t border-line pt-8">
         <h2 className="text-2xl">活動日</h2>
@@ -67,7 +67,7 @@ export default function JoinPage() {
           ))}
         </dl>
       </section>
-      </div>
+      </ContentRails>
     </div>
   );
 }

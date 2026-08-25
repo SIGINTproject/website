@@ -1,6 +1,7 @@
 export * from "./breadcrumb";
 export * from "./button";
 export * from "./card";
+export * from "./content-rails";
 export * from "./empty-state";
 export * from "./page-heading";
 export * from "./pagination";

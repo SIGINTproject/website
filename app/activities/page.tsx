@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 import { ContentList } from "@/app/_components/content-list";
 import { getAllTags, getContentPage } from "@/lib/content";
-import { PageHeading } from "@/components/ui";
+import { ContentRails, PageHeading } from "@/components/ui";
 
 export const metadata: Metadata = {
   title: "活動記録",
@@ -31,9 +31,9 @@ export default async function ActivitiesPage({
         の日々の活動を記録しています。
       </p>
       </PageHeading>
-      <div className="mt-10 max-w-4xl lg:ml-auto lg:mt-14">
+      <ContentRails className="mt-10 max-w-4xl mx-auto lg:mt-14">
         <ContentList collection="activities" data={data} allTags={allTags} />
-      </div>
+      </ContentRails>
     </div>
   );
 }

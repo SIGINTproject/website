@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 import { getContentPage } from "@/lib/content";
-import { ButtonLink, Card, CardLabel, VlanTrunkLine } from "@/components/ui";
+import { ButtonLink, Card, CardLabel } from "@/components/ui";
 
 const PILLARS = [
   {
@@ -32,7 +32,6 @@ export default async function HomePage() {
         <div className="mx-auto grid max-w-site lg:grid-cols-[18rem_1fr]">
           <div className="border-b border-line px-5 py-8 sm:px-8 lg:border-b-0 lg:border-r lg:px-12 lg:py-24">
             <p className="font-label text-xs font-semibold tracking-[0.16em] text-signal">01 / OVERVIEW</p>
-            <div className="mt-8"><VlanTrunkLine label="VLAN 10" /></div>
           </div>
           <div className="px-5 py-14 sm:px-8 sm:py-20 lg:px-16 lg:py-24">
           <p className="font-label text-xs font-semibold uppercase tracking-[0.16em] text-muted">Network Study Group</p>
