@@ -4,6 +4,10 @@ Claude Code 1 + Codex 2 が並走して実装するにあたっての共通仕�
 **作業前に必ずこのドキュメントを読むこと。** 自分の担当範囲外のファイルは編集せず、
 変更が必要な場合は担当エージェントに申し送ること。
 
+`feat/pwa` と `feat/design` は `main` に統合済み。品質計測・既知の課題は
+[`docs/QUALITY.md`](./QUALITY.md)、記事の追加方法は
+[`docs/CONTRIBUTING.md`](./CONTRIBUTING.md) を参照。
+
 ## 1. サイトの目的（優先順）
 
 1. 新入生・在学生への入部訴求（何をやっている団体か、初心者でも入れるかが即わかる）
@@ -29,14 +33,14 @@ Claude Code 1 + Codex 2 が並走して実装するにあたっての共通仕�
 |---|---|---|
 | `/` | トップ（ヒーロー、活動の3本柱、最新の活動記録3件、最新の技術ブログ3件） | 骨組み実装済み |
 | `/about` | ミッション、活動内容、年間スケジュール、部室設備 | 骨組み実装済み（スケジュール・設備はTODO） |
-| `/activities` | 活動記録一覧（タグ絞り込み・ページング） | 骨組み実装済み。無限スクロールは未実装（§6参照） |
+| `/activities` | 活動記録一覧（タグ絞り込み・無限スクロール） | 実装済み |
 | `/activities/[slug]` | 活動記録詳細（MDX） | 実装済み |
-| `/blog` | 技術ブログ一覧（タグ絞り込み・ページング） | 骨組み実装済み。無限スクロールは未実装 |
+| `/blog` | 技術ブログ一覧（タグ絞り込み・無限スクロール） | 実装済み |
 | `/blog/[slug]` | 技術ブログ詳細（MDX） | 実装済み |
-| `/network` | 部室ネットワーク紹介 | 骨組み実装済み（構成図・機材・AS番号はTODO） |
-| `/join` | 入部案内 | 骨組み実装済み（活動日・見学方法はTODO） |
-| `/contact` | お問い合わせ（外部フォームに委譲予定） | 骨組み実装済み（フォームURL未確定） |
-| `/offline` | オフラインフォールバック画面 | **未実装。PWAワークストリームの成果物**（§7） |
+| `/network` | 部室ネットワーク紹介 | 実装済み（構成図・機材・AS番号はTODO） |
+| `/join` | 入部案内 | 実装済み（活動日・見学方法はTODO） |
+| `/contact` | お問い合わせ（外部フォームに委譲予定） | 実装済み（フォームURL未確定） |
+| `/offline` | オフラインフォールバック画面 | 実装済み |
 
 ## 4. 技術スタック
 
@@ -124,13 +128,13 @@ GET /api/content/:collection?tag=<string>&page=<number>
 
 | 要件 | ステータス | 担当 |
 |---|---|---|
-| SPA的なクライアント遷移・初回プリレンダリング | Next.js App Router により実装済み | - |
-| Service Worker によるオフライン表示 | 未実装 | Codex #1 |
-| 表示状態の復元（タグ・ページ数はURL、スクロール位置・件数はsessionStorage） | URLパラメータ部分（`?tag=&page=`）は実装済み。スクロール位置・件数の復元は未実装 | Codex #1 |
-| Intersection Observer による無限スクロール | 未実装（JS無効時のページング機能は実装済み） | Codex #1 |
-| PWA（manifest / インストール可能 / オフラインUI） | 未実装 | Codex #1 |
-| レスポンシブ（375 / 768 / 1440） | 未検証（プレースホルダのTailwindクラスのみ） | Codex #2 |
-| UX（キーボード操作、フォーカス可視、reduced-motion、空/エラー/ローディング文言） | 空状態文言は実装済み。フォーカスリング等の意匠は未着手 | Codex #2 |
+| SPA的なクライアント遷移・初回プリレンダリング | 実装済み（Next.js App Router） | - |
+| Service Worker によるオフライン表示 | 実装済み | Codex #1 |
+| 表示状態の復元（タグ・ページ数はURL、スクロール位置・件数はsessionStorage） | 実装済み | Codex #1 |
+| Intersection Observer による無限スクロール | 実装済み（JS無効時のページングも維持） | Codex #1 |
+| PWA（manifest / インストール可能 / オフラインUI） | 実装済み。実機でのインストール確認は未実施（`docs/QUALITY.md`参照） | Codex #1 |
+| レスポンシブ（375 / 768 / 1440） | 実装済み・Playwright visual regressionで検証済み | Codex #2 |
+| UX（キーボード操作、フォーカス可視、reduced-motion、空/エラー/ローディング文言） | 実装済み・axe-coreで検証済み | Codex #2 |
 
 ### 実際にどう作ったか（各担当が実装後に追記する）
 
@@ -154,13 +158,25 @@ GET /api/content/:collection?tag=<string>&page=<number>
   1ページ目から保存ページまでを再取得してスクロール位置を戻す。新規ナビゲーションの
   エントリIDは一致しないため保存状態を適用しない。E2E向けに sentinel、loading、error、
   update notice、offline page にも `data-testid` を付与した。
-- **Codex #2（デザイン/Playwright）:** TODO — 実装後に追記
+- **Codex #2（デザイン/Playwright）:** デザインコンセプト「静かな基盤 / Quiet
+  Infrastructure」のもと、案B「Network Index」レイアウトとシグネチャ要素
+  「VLAN Trunk Line」を採用。カラー・タイポグラフィ・余白のトークンを
+  `styles/tokens.css` に集約し、`components/ui/`（Button, Card, Tag,
+  Breadcrumb, Skeleton, EmptyState, Pagination, SiteHeader, SiteFooter,
+  VlanTrunkLine ほか）に実装。SiteHeaderのモバイルドロワーは `<details>` で
+  実装し、キーボード操作・フォーカスリング・`prefers-reduced-motion` に対応。
+  Playwright E2E（`tests/e2e/`）で主要7ページのスモークテスト・axe-core
+  によるアクセシビリティ検査・375/768/1440のvisual regression・無限スクロール
+  検証・PWA検証（8項目）を実装し、GitHub Actions（`.github/workflows/e2e.yml`）
+  に配線した。
 
 ## 9. ディレクトリ構成（現状）
 
 ```
 app/
-  layout.tsx              # ルートレイアウト（プレースホルダのヘッダー/フッター）
+  layout.tsx              # ルートレイアウト（SerwistProvider, SiteHeader/Footer）
+  sw.ts                    # Service Worker ソース（Codex #1）
+  offline/page.tsx         # オフラインフォールバック画面（Codex #1）
   page.tsx                # トップページ
   about/page.tsx
   activities/page.tsx
@@ -172,8 +188,9 @@ app/
   contact/page.tsx
   api/content/[collection]/route.ts   # 一覧のJSONページングAPI
   _components/
-    content-list.tsx      # 一覧の共通UI（server component）
-    content-detail.tsx    # 詳細の共通UI（server component, MDXRemote）
+    content-list.tsx           # 一覧の共通UI（server component、タグ絞り込み）
+    content-detail.tsx         # 詳細の共通UI（server component, MDXRemote）
+    infinite-content-list.tsx  # 無限スクロール本体（client component, Codex #1構造 + Codex #2見た目）
 content/
   activities/*.mdx         # 活動記録10本（ダミーコンテンツ）
   blog/*.mdx                # 技術ブログ10本（ダミーコンテンツ）
@@ -181,27 +198,42 @@ lib/
   content/
     types.ts               # frontmatterスキーマ・型定義
     index.ts                # 読み込み・検証・キャッシュ・ページング
+  pwa/
+    serwist-provider.tsx    # SW登録（@serwist/next の SerwistProvider）
+    service-worker-update.tsx  # 更新通知バナー
+hooks/
+  use-infinite-content.ts   # 無限スクロール・状態復元フック
+components/
+  ui/                       # デザインシステム（Button, Card, Tag, SiteHeader ほか）
+styles/
+  tokens.css                # デザイントークン
+  base.css
+tests/
+  e2e/                      # Playwright（smoke, accessibility, visual, content-list, pwa）
+public/
+  manifest.webmanifest
+.github/
+  workflows/e2e.yml         # CI（lint/型検査/build/Chromium E2E）
 docs/
   SPEC.md                   # 本ドキュメント
+  QUALITY.md                 # 統合フェーズの品質レポート
+  CONTRIBUTING.md            # 記事の追加方法
 ```
-
-未作成（他ワークストリームが作成予定）: `lib/pwa/`, `hooks/`, `styles/`,
-`components/ui/`, `tests/e2e/`, `playwright.config.ts`,
-`public/manifest.webmanifest`, `app/sw.ts`, `app/offline/`。
 
 ## 10. 受け入れ条件
 
-- [ ] 初回表示は事前生成HTML、以降の遷移はクライアントサイドで即時
-- [ ] 一度見たページが機内モード（オフライン）で開ける
-- [ ] 未訪問ページはオフライン時に専用画面（`/offline`）へ落ちる
-- [ ] 一覧の絞り込み・件数・スクロール位置が「戻る」で復元される
-- [ ] URL を共有すると同じ絞り込み状態で開ける（`?tag=&page=` は実装済み）
-- [ ] Intersection Observer による追加読み込み（JS 無効でも1ページ目は読める。
-      1ページ目とページング遷移は実装済み）
-- [ ] ホーム画面に追加でき、スタンドアロン表示になる
-- [ ] 375 / 768 / 1440 で破綻なし、キーボードのみで全機能に到達できる
-- [ ] Playwright 8項目がすべてグリーン、CI で自動実行
-- [ ] 参考2サイトからの文章・画像・ロゴの流用がゼロ
+実測結果の詳細は [`docs/QUALITY.md`](./QUALITY.md) を参照。
+
+- [x] 初回表示は事前生成HTML、以降の遷移はクライアントサイドで即時
+- [x] 一度見たページが機内モード（オフライン）で開ける
+- [x] 未訪問ページはオフライン時に専用画面（`/offline`）へ落ちる
+- [x] 一覧の絞り込み・件数・スクロール位置が「戻る」で復元される
+- [x] URL を共有すると同じ絞り込み状態で開ける（`?tag=&page=`）
+- [x] Intersection Observer による追加読み込み（JS 無効でも1ページ目は読める）
+- [x] ホーム画面に追加でき、スタンドアロン表示になる（manifest要件は充足。実機確認は未実施）
+- [x] 375 / 768 / 1440 で破綻なし、キーボードのみで全機能に到達できる
+- [ ] Playwright 8項目がすべてグリーン、CI で自動実行 → 41/42（残り1件は状態復元テスト用フィクスチャ不足）
+- [x] 参考2サイトからの文章・画像・ロゴの流用がゼロ
 
 ## 11. 確認したいこと（人間の判断が必要）
 
@@ -210,8 +242,12 @@ docs/
   `/about`, `/network`, `/join`, `/contact` は情報として不完全な状態で公開される。
 - お問い合わせフォームに使う外部サービス（Google フォーム等）が未確定。
 - Node.js の実行環境が v20.12.0 のため、pnpm は v9系を使用している
-  （最新の pnpm 11系は Node 22+ が必須で動かなかった）。CI/デプロイ環境の
-  Node バージョンに合わせて `package.json` の `packageManager` を確定してほしい。
+  （最新の pnpm 11系は Node 22+ が必須で動かなかった）。`package.json` に
+  `"packageManager": "pnpm@9.15.9"` を設定済み。Node 22+ のCI/デプロイ環境に
+  移行する場合は見直すこと。
+- `@serwist/next` が Next.js 16 既定の Turbopack と非互換のため、
+  `dev` / `build` は `--webpack` を明示している（`docs/QUALITY.md` §1参照）。
+  Serwist が Turbopack に対応した場合は削除を検討する。
 - ダミーコンテンツ（活動記録・技術ブログ各10本）は無限スクロール検証のための
   架空の内容。実際の活動記録に差し替える、またはそのまま初期コンテンツとして
   残すかは要判断。
