@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 
 import { ContentList } from "@/app/_components/content-list";
 import { getAllTags, getContentPage } from "@/lib/content";
+import { PageHeading } from "@/components/ui";
 
 export const metadata: Metadata = {
   title: "活動記録",
@@ -23,13 +24,14 @@ export default async function ActivitiesPage({
   const allTags = getAllTags("activities");
 
   return (
-    <div className="mx-auto w-full max-w-3xl px-4 py-12 sm:px-6">
-      <h1 className="text-2xl font-bold">活動記録</h1>
-      <p className="mt-2 text-zinc-600 dark:text-zinc-400">
+    <div className="mx-auto w-full max-w-site px-5 py-12 sm:px-8 lg:px-12 lg:py-20">
+      <PageHeading eyebrow="02 / ACTIVITY" title="活動記録">
+      <p>
         カリキュラム・部室ネットワークの運用・学内イベント支援など、SIGINT
         の日々の活動を記録しています。
       </p>
-      <div className="mt-8">
+      </PageHeading>
+      <div className="mt-10 max-w-4xl lg:ml-auto lg:mt-14">
         <ContentList collection="activities" data={data} allTags={allTags} />
       </div>
     </div>

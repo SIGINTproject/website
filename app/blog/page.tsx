@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 
 import { ContentList } from "@/app/_components/content-list";
 import { getAllTags, getContentPage } from "@/lib/content";
+import { PageHeading } from "@/components/ui";
 
 export const metadata: Metadata = {
   title: "技術ブログ",
@@ -23,12 +24,13 @@ export default async function BlogPage({
   const allTags = getAllTags("blog");
 
   return (
-    <div className="mx-auto w-full max-w-3xl px-4 py-12 sm:px-6">
-      <h1 className="text-2xl font-bold">技術ブログ</h1>
-      <p className="mt-2 text-zinc-600 dark:text-zinc-400">
+    <div className="mx-auto w-full max-w-site px-5 py-12 sm:px-8 lg:px-12 lg:py-20">
+      <PageHeading eyebrow="03 / BLOG" title="技術ブログ">
+      <p>
         ネットワーク技術の解説記事や、活動の中で得た知見をまとめています。
       </p>
-      <div className="mt-8">
+      </PageHeading>
+      <div className="mt-10 max-w-4xl lg:ml-auto lg:mt-14">
         <ContentList collection="blog" data={data} allTags={allTags} />
       </div>
     </div>

@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { EmptyState, Pagination, Tag, TagLink } from "@/components/ui";
 import type { ContentCollection, ContentPage } from "@/lib/content";
 
 const COLLECTION_LABEL: Record<ContentCollection, string> = {
@@ -38,58 +39,39 @@ export function ContentList({
   return (
     <div>
       <nav aria-label="タグで絞り込み" className="mb-6">
-        <ul
-          data-testid="tag-filter"
-          className="flex flex-wrap gap-2 text-sm"
-        >
+        <ul data-testid="tag-filter" className="flex flex-wrap gap-2">
           <li>
-            <Link
-              href={buildHref(collection, {})}
-              aria-current={!tag ? "true" : undefined}
-              className={`rounded-full border px-3 py-1 ${
-                !tag
-                  ? "border-zinc-900 bg-zinc-900 text-white dark:border-zinc-100 dark:bg-zinc-100 dark:text-zinc-900"
-                  : "border-zinc-300 dark:border-zinc-700"
-              }`}
-            >
+            <TagLink href={buildHref(collection, {})} selected={!tag}>
               すべて
-            </Link>
+            </TagLink>
           </li>
           {allTags.map(({ tag: t, count }) => (
             <li key={t}>
-              <Link
-                href={buildHref(collection, { tag: t })}
-                aria-current={tag === t ? "true" : undefined}
-                className={`rounded-full border px-3 py-1 ${
-                  tag === t
-                    ? "border-zinc-900 bg-zinc-900 text-white dark:border-zinc-100 dark:bg-zinc-100 dark:text-zinc-900"
-                    : "border-zinc-300 dark:border-zinc-700"
-                }`}
-              >
+              <TagLink href={buildHref(collection, { tag: t })} selected={tag === t}>
                 {t}
                 <span className="ml-1 text-xs opacity-70">{count}</span>
-              </Link>
+              </TagLink>
             </li>
           ))}
         </ul>
       </nav>
 
       {items.length === 0 ? (
-        <p data-testid="content-empty" className="text-zinc-500">
-          {tag
-            ? `「${tag}」に該当する記事はまだありません。`
-            : "まだ記事がありません。"}
-        </p>
+        <div data-testid="content-empty">
+          <EmptyState>
+            {tag ? `「${tag}」に該当する記事はまだありません。` : "まだ記事がありません。"}
+          </EmptyState>
+        </div>
       ) : (
-        <ul data-testid="content-list" className="flex flex-col gap-6">
+        <ul data-testid="content-list" className="border-b border-line">
           {items.map((entry) => (
             <li
               key={entry.slug}
               data-testid="content-card"
-              className="border-b border-zinc-200 pb-6 dark:border-zinc-800"
+              className="group border-t border-line py-7 sm:grid sm:grid-cols-[9rem_1fr] sm:gap-6"
             >
-              <article>
-                <p className="text-xs text-zinc-500">
+              <article className="contents">
+                <p className="font-label text-xs leading-6 text-muted">
                   <time dateTime={entry.frontmatter.date}>
                     {entry.frontmatter.date}
                   </time>
@@ -98,48 +80,37 @@ export function ContentList({
                   {" · "}
                   読了目安 {entry.readingTimeMinutes} 分
                 </p>
-                <h2 className="mt-1 text-lg font-semibold">
+                <div>
+                <h2 className="text-lg font-semibold sm:text-xl">
                   <Link
                     href={`/${entry.collection}/${entry.slug}`}
-                    className="underline-offset-4 hover:underline"
+                    className="transition-colors group-hover:text-signal"
                   >
                     {entry.frontmatter.title}
                   </Link>
                 </h2>
-                <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
+                <p className="mt-2 text-sm leading-7 text-muted">
                   {entry.frontmatter.summary}
                 </p>
                 {entry.frontmatter.tags.length > 0 && (
-                  <ul className="mt-3 flex flex-wrap gap-2 text-xs text-zinc-500">
+                  <ul className="mt-4 flex flex-wrap gap-2">
                     {entry.frontmatter.tags.map((t) => (
-                      <li key={t} className="rounded border px-2 py-0.5">
-                        {t}
-                      </li>
+                      <li key={t}><Tag>{t}</Tag></li>
                     ))}
                   </ul>
                 )}
+                </div>
               </article>
             </li>
           ))}
         </ul>
       )}
 
-      <div className="mt-8" data-testid="pagination">
-        {hasNextPage ? (
-          <Link
-            data-testid="load-more-link"
-            href={buildHref(collection, { tag, page: page + 1 })}
-            className="inline-block rounded border border-zinc-300 px-4 py-2 text-sm dark:border-zinc-700"
-          >
-            もっと見る
-          </Link>
-        ) : (
-          totalItems > 0 && (
-            <p data-testid="content-end" className="text-sm text-zinc-500">
-              これで全部です。
-            </p>
-          )
-        )}
+      <div className="mt-8">
+        <Pagination
+          nextHref={hasNextPage ? buildHref(collection, { tag, page: page + 1 }) : undefined}
+          end={!hasNextPage && totalItems > 0}
+        />
       </div>
     </div>
   );

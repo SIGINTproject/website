@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { PageHeading } from "@/components/ui";
 
 export const metadata: Metadata = {
   title: "私たちについて",
@@ -9,20 +10,21 @@ export const metadata: Metadata = {
 
 export default function AboutPage() {
   return (
-    <div className="mx-auto w-full max-w-3xl px-4 py-12 sm:px-6">
-      <h1 className="text-2xl font-bold">私たちについて</h1>
+    <div className="mx-auto w-full max-w-site px-5 py-12 sm:px-8 lg:px-12 lg:py-20">
+      <PageHeading eyebrow="01 / ABOUT" title="私たちについて" />
+      <div className="max-w-reading lg:ml-auto">
 
-      <section className="mt-8">
-        <h2 className="text-lg font-semibold">ミッション</h2>
-        <p className="mt-2 text-zinc-600 dark:text-zinc-400">
+      <section className="mt-12 border-t border-line pt-8">
+        <h2 className="text-2xl">ミッション</h2>
+        <p className="mt-4 text-muted">
           ネットワーク未経験の学生でも実機に触れながら基礎から学べる環境をつくり、
           学んだ技術を部室ネットワークという実際の運用の場で活かすことを目指しています。
         </p>
       </section>
 
-      <section className="mt-8">
-        <h2 className="text-lg font-semibold">活動内容</h2>
-        <ul className="mt-2 list-disc space-y-1 pl-5 text-zinc-600 dark:text-zinc-400">
+      <section className="mt-12 border-t border-line pt-8">
+        <h2 className="text-2xl">活動内容</h2>
+        <ul className="mt-4 list-square space-y-2 pl-5 text-muted marker:text-signal">
           <li>実機を用いたネットワーク基礎カリキュラム（1年生向け）</li>
           <li>
             部室ネットワークの設計・運用（マルチVLAN、VyOSによるルーティング、
@@ -33,25 +35,26 @@ export default function AboutPage() {
         </ul>
       </section>
 
-      <section className="mt-8">
-        <h2 className="text-lg font-semibold">年間スケジュール</h2>
-        <p className="mt-2 text-sm text-zinc-500">
+      <section className="mt-12 border-t border-line pt-8">
+        <h2 className="text-2xl">年間スケジュール</h2>
+        <p className="mt-4 border-l-2 border-signal pl-4 text-sm text-muted">
           TODO(sigint): 実際の年間スケジュール（新歓期・カリキュラムの時期・
           学園祭対応・成果発表など）を確認のうえ表形式でまとめる。
         </p>
       </section>
 
-      <section className="mt-8">
-        <h2 className="text-lg font-semibold">部室設備</h2>
-        <p className="mt-2 text-sm text-zinc-500">
+      <section className="mt-12 border-t border-line pt-8">
+        <h2 className="text-2xl">部室設備</h2>
+        <p className="mt-4 border-l-2 border-signal pl-4 text-sm text-muted">
           TODO(sigint): 部室に常設している機材（スイッチ・ルータ・サーバ等）の
           一覧を確認のうえ掲載する。構成の詳細は
-          <Link href="/network" className="underline-offset-4 hover:underline">
+          <Link href="/network" className="text-signal underline underline-offset-4">
             部室ネットワーク紹介
           </Link>
           ページも参照。
         </p>
       </section>
+      </div>
     </div>
   );
 }
