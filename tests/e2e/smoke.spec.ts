@@ -17,3 +17,17 @@ for (const path of majorPages) {
     expect(errors).toEqual([]);
   });
 }
+
+test("モバイルドロワーをキーボードで操作できる", async ({ page }) => {
+  await page.setViewportSize({ width: 375, height: 812 });
+  await page.goto("/");
+
+  const menu = page.getByText("MENU", { exact: true });
+  await menu.focus();
+  await page.keyboard.press("Enter");
+
+  const navigation = page.getByRole("navigation", { name: "モバイルナビゲーション" });
+  await expect(navigation).toBeVisible();
+  await page.keyboard.press("Tab");
+  await expect(navigation.getByRole("link").first()).toBeFocused();
+});

@@ -2,11 +2,15 @@
   "name": "sigint",
   "version": "0.1.0",
   "private": true,
+  "packageManager": "pnpm@9.15.9",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test:e2e": "playwright test",
+    "test:e2e:update": "playwright test tests/e2e/visual.spec.ts --update-snapshots",
+    "test:e2e:report": "playwright show-report"
   },
   "dependencies": {
     "gray-matter": "^4.0.3",
@@ -18,6 +22,8 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.13.0",
+    "@playwright/test": "^1.62.1",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",

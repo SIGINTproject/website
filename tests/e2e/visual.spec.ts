@@ -15,6 +15,7 @@ for (const viewport of viewports) {
       await page.setViewportSize(viewport);
       await page.emulateMedia({ colorScheme: "light", reducedMotion: "reduce" });
       await page.goto(paths[index], { waitUntil: "networkidle" });
+      await page.addStyleTag({ content: "nextjs-portal { display: none !important; }" });
       await expect(page).toHaveScreenshot(`${pages[index]}-${viewport.name}.png`, {
         fullPage: true,
       });

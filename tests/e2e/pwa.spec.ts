@@ -1,8 +1,18 @@
 import { expect, test } from "@playwright/test";
 
+async function waitForServiceWorker(page: import("@playwright/test").Page) {
+  await expect
+    .poll(() => page.evaluate(async () => (await navigator.serviceWorker?.getRegistrations())?.length ?? 0))
+    .toBeGreaterThan(0);
+  return page.evaluate(async () => {
+    const registration = await navigator.serviceWorker.ready;
+    return registration.active?.state;
+  });
+}
+
 test("訪問済みページはオフラインで再表示される", async ({ page, context }) => {
   await page.goto("/about", { waitUntil: "networkidle" });
-  await expect.poll(() => page.evaluate(() => navigator.serviceWorker?.ready.then(() => true))).toBe(true);
+  await waitForServiceWorker(page);
   await context.setOffline(true);
   await page.reload();
   await expect(page.getByRole("heading", { level: 1, name: "私たちについて" })).toBeVisible();
@@ -10,7 +20,7 @@ test("訪問済みページはオフラインで再表示される", async ({ pa
 
 test("未訪問ページはオフラインフォールバックを表示する", async ({ page, context }) => {
   await page.goto("/", { waitUntil: "networkidle" });
-  await expect.poll(() => page.evaluate(() => navigator.serviceWorker?.ready.then(() => true))).toBe(true);
+  await waitForServiceWorker(page);
   await context.setOffline(true);
   await page.goto(`/contact?uncached=${Date.now()}`).catch(() => undefined);
   await expect(page).toHaveURL(/\/offline/);
@@ -19,10 +29,7 @@ test("未訪問ページはオフラインフォールバックを表示する",
 
 test("Service Worker が登録・activatedになり、更新通知が表示される", async ({ page }) => {
   await page.goto("/", { waitUntil: "networkidle" });
-  const state = await page.evaluate(async () => {
-    const registration = await navigator.serviceWorker.ready;
-    return registration.active?.state;
-  });
+  const state = await waitForServiceWorker(page);
   expect(state).toBe("activated");
 
   await page.evaluate(async () => {
@@ -37,7 +44,9 @@ test("Service Worker が登録・activatedになり、更新通知が表示さ�
 
 test("manifest と必須アイコンを取得できる", async ({ page, request }) => {
   await page.goto("/");
-  const manifestHref = await page.locator('link[rel="manifest"]').getAttribute("href");
+  const manifestLink = page.locator('link[rel="manifest"]');
+  await expect(manifestLink).toHaveCount(1);
+  const manifestHref = await manifestLink.getAttribute("href");
   expect(manifestHref).toBeTruthy();
 
   const response = await request.get(manifestHref!);

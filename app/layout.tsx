@@ -37,6 +37,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="ja"
+      data-scroll-behavior="smooth"
       className={`${bodyJapanese.variable} ${bodyLatin.variable} ${headingLatin.variable} h-full antialiased`}
       style={{ "--font-heading-ja": "var(--font-body-ja)" } as React.CSSProperties}
     >
