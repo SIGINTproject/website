@@ -134,7 +134,26 @@ GET /api/content/:collection?tag=<string>&page=<number>
 
 ### 実際にどう作ったか（各担当が実装後に追記する）
 
-- **Codex #1（PWA/無限スクロール）:** TODO — 実装後に追記
+- **Codex #1（PWA/無限スクロール）:** `@serwist/next` の InjectManifest 構成で
+  `app/sw.ts` とビルド成果物を `/sw.js` にまとめた。App Shell・静的成果物・
+  `/offline` をプリキャッシュし、同一オリジンの画面遷移は
+  stale-while-revalidate、画像は最大80件・30日間の cache-first とした。
+  未取得ページのオフライン遷移は `/offline` にフォールバックする。
+  `skipWaiting` は自動実行せず、待機中の Worker を検知した場合に限り
+  「新しいバージョンがあります」の通知を出し、利用者が「再読み込み」を
+  選んだ後で更新する。
+
+  一覧は SSR の `ContentList` と通常の `?page=n` リンクを初期HTMLに残し、
+  hydration 後に `useInfiniteContent` が `rootMargin: 600px` のセンチネルを監視する。
+  APIから9件ずつ追加し、処理中の多重取得を ref で防止、unmount 時に observer と
+  復元用 fetch を停止する。読み込み中は3件のスケルトン、完了時は
+  「これで全部です。」を表示する。読み込みページ数はURLへ反映する。
+
+  復元状態は collection・tag ごとに sessionStorage へページ数と scrollY を保存する。
+  履歴エントリへ固有IDを付け、詳細ページから同じエントリへ「戻る」で復帰した場合のみ
+  1ページ目から保存ページまでを再取得してスクロール位置を戻す。新規ナビゲーションの
+  エントリIDは一致しないため保存状態を適用しない。E2E向けに sentinel、loading、error、
+  update notice、offline page にも `data-testid` を付与した。
 - **Codex #2（デザイン/Playwright）:** TODO — 実装後に追記
 
 ## 9. ディレクトリ構成（現状）
