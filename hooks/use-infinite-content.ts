@@ -7,17 +7,12 @@ import type { ContentCollection, ContentPage, ContentSummary } from "@/lib/conte
 const STORAGE_PREFIX = "sigint:list:";
 
 type SavedListState = {
-  entryId: string;
   page: number;
   scrollY: number;
 };
 
-function entryIdFor(collection: ContentCollection, tag: string | null) {
-  return `${collection}:${tag ?? "all"}`;
-}
-
 function storageKey(collection: ContentCollection, tag: string | null) {
-  return `${STORAGE_PREFIX}${entryIdFor(collection, tag)}`;
+  return `${STORAGE_PREFIX}${collection}:${tag ?? "all"}`;
 }
 
 function readSavedState(collection: ContentCollection, tag: string | null) {
@@ -29,8 +24,10 @@ function readSavedState(collection: ContentCollection, tag: string | null) {
   }
 }
 
-function createEntryId() {
-  return crypto.randomUUID?.() ?? `${Date.now()}-${Math.random()}`;
+function currentUrlPage() {
+  const value = new URLSearchParams(window.location.search).get("page");
+  const parsed = value ? Number.parseInt(value, 10) : 1;
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : 1;
 }
 
 export function useInfiniteContent({
@@ -48,8 +45,8 @@ export function useInfiniteContent({
   const [isReady, setIsReady] = useState(false);
   const sentinelRef = useRef<HTMLDivElement>(null);
   const loadingRef = useRef(false);
-  const entryIdRef = useRef("");
   const pageRef = useRef(initialData.page);
+  const readyRef = useRef(false);
 
   const fetchPage = useCallback(
     async (nextPage: number, signal?: AbortSignal) => {
@@ -102,21 +99,22 @@ export function useInfiniteContent({
 
   useEffect(() => {
     const controller = new AbortController();
-    const historyState = (window.history.state ?? {}) as Record<string, unknown>;
-    const stateKey = `sigintListEntry:${entryIdFor(collection, initialData.tag)}`;
-    const existingId = typeof historyState[stateKey] === "string" ? historyState[stateKey] : null;
-    const entryId = existingId ?? createEntryId();
-    entryIdRef.current = entryId;
-    if (!existingId) {
-      window.history.replaceState({ ...historyState, [stateKey]: entryId }, "");
-    }
-
+    // Browser back/forward always reuses Next.js's client route cache to avoid
+    // losing scroll position (this is independent of `staleTimes` and isn't
+    // triggered by our `history.replaceState` URL updates below), so on back
+    // navigation `initialData` here can reflect a stale page-1 render even
+    // though the address bar already shows `?page=N`. Read the true current
+    // page from the URL instead of trusting the prop.
+    const urlPage = currentUrlPage();
     const saved = readSavedState(collection, initialData.tag);
-    const shouldRestore = saved?.entryId === entryId && saved.page > 1;
+    const shouldRestore = urlPage > 1 && saved !== null && saved.page >= urlPage;
 
     async function restore() {
       if (!shouldRestore || !saved) {
+        pageRef.current = urlPage;
+        setPage(urlPage);
         setIsReady(true);
+        readyRef.current = true;
         return;
       }
       setIsLoading(true);
@@ -138,26 +136,44 @@ export function useInfiniteContent({
       } finally {
         setIsLoading(false);
         setIsReady(true);
+        readyRef.current = true;
       }
     }
     void restore();
     return () => controller.abort();
-  }, [collection, fetchPage, initialData.page, initialData.tag]);
+  }, [collection, fetchPage, initialData.tag]);
 
   useEffect(() => {
     const save = () => {
-      if (!entryIdRef.current) return;
+      // A mount that never finished its own restore (e.g. aborted by a
+      // second effect pass under React Strict Mode, or by unmounting before
+      // `restore()` settles) must not overwrite a previously saved deeper
+      // session with its own unrestored page=1 state.
+      if (!readyRef.current) return;
       const value: SavedListState = {
-        entryId: entryIdRef.current,
         page: pageRef.current,
         scrollY: window.scrollY,
       };
       sessionStorage.setItem(storageKey(collection, initialData.tag), JSON.stringify(value));
     };
+    const saveOnActivation = (event: Event) => {
+      if (event instanceof KeyboardEvent && event.key !== "Enter" && event.key !== " ") return;
+      save();
+    };
+    // `pointerdown`/`keydown` fire before Next.js starts a client-side
+    // transition to a clicked article (which resets scroll position as part
+    // of navigating to the new route, before this effect's own unmount
+    // cleanup would otherwise run), so they're the last reliable point to
+    // capture "the scroll position the user was reading at" before leaving
+    // the list. Calling `save()` unconditionally on unmount instead would
+    // read `window.scrollY` after Next.js has already reset it to 0.
+    window.addEventListener("pointerdown", saveOnActivation, { capture: true });
+    window.addEventListener("keydown", saveOnActivation, { capture: true });
     window.addEventListener("pagehide", save);
     document.addEventListener("visibilitychange", save);
     return () => {
-      save();
+      window.removeEventListener("pointerdown", saveOnActivation, { capture: true });
+      window.removeEventListener("keydown", saveOnActivation, { capture: true });
       window.removeEventListener("pagehide", save);
       document.removeEventListener("visibilitychange", save);
     };
