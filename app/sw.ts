@@ -34,4 +34,16 @@ const serwist = new Serwist({
   },
 });
 
+// Belt-and-suspenders: `fallbacks` above attaches a per-strategy plugin, but
+// if a route's strategy still rejects (e.g. no runtime-caching route
+// matched at all), fall back to the precached offline document directly
+// rather than letting the navigation surface as a raw network error.
+serwist.setCatchHandler(async ({ request }) => {
+  if (request.destination === "document") {
+    const offline = await serwist.matchPrecache("/offline");
+    if (offline) return offline;
+  }
+  return Response.error();
+});
+
 serwist.addEventListeners();
