@@ -33,7 +33,7 @@ export default defineConfig({
     : {
         command: process.env.CI
           ? `./node_modules/.bin/next start --hostname 127.0.0.1 --port ${port}`
-          : `./node_modules/.bin/next dev --hostname 127.0.0.1 --port ${port}`,
+          : `./node_modules/.bin/next dev --webpack --hostname 127.0.0.1 --port ${port}`,
         url: baseURL,
         reuseExistingServer: !process.env.CI,
         timeout: 120_000,

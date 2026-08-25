@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { BIZ_UDPGothic, IBM_Plex_Sans, IBM_Plex_Sans_Condensed } from "next/font/google";
 
+import { SerwistProvider } from "@/lib/pwa/serwist-provider";
 import { ServiceWorkerUpdate } from "@/lib/pwa/service-worker-update";
 import { SiteFooter, SiteHeader } from "@/components/ui";
 import "./globals.css";
@@ -49,21 +50,23 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       style={{ "--font-heading-ja": "var(--font-body-ja)" } as React.CSSProperties}
     >
       <body className="min-h-full flex flex-col">
-        <ServiceWorkerUpdate />
-        <a
-          href="#main-content"
-          className="sr-only focus:not-sr-only focus:absolute focus:left-2 focus:top-2 focus:z-50 focus:rounded focus:bg-black focus:px-4 focus:py-2 focus:text-white"
-        >
-          本文へスキップ
-        </a>
+        <SerwistProvider>
+          <ServiceWorkerUpdate />
+          <a
+            href="#main-content"
+            className="sr-only focus:not-sr-only focus:absolute focus:left-2 focus:top-2 focus:z-50 focus:rounded focus:bg-black focus:px-4 focus:py-2 focus:text-white"
+          >
+            本文へスキップ
+          </a>
 
-        <SiteHeader />
+          <SiteHeader />
 
-        <main id="main-content" className="flex flex-1 flex-col">
-          {children}
-        </main>
+          <main id="main-content" className="flex flex-1 flex-col">
+            {children}
+          </main>
 
-        <SiteFooter />
+          <SiteFooter />
+        </SerwistProvider>
       </body>
     </html>
   );
