@@ -1,11 +1,7 @@
 import Link from "next/link";
 
+import { InfiniteContentList } from "@/app/_components/infinite-content-list";
 import type { ContentCollection, ContentPage } from "@/lib/content";
-
-const COLLECTION_LABEL: Record<ContentCollection, string> = {
-  activities: "活動記録",
-  blog: "技術ブログ",
-};
 
 function buildHref(
   collection: ContentCollection,
@@ -33,7 +29,7 @@ export function ContentList({
   data: ContentPage;
   allTags: { tag: string; count: number }[];
 }) {
-  const { items, page, hasNextPage, tag, totalItems } = data;
+  const { items, tag } = data;
 
   return (
     <div>
@@ -80,67 +76,7 @@ export function ContentList({
             ? `「${tag}」に該当する記事はまだありません。`
             : "まだ記事がありません。"}
         </p>
-      ) : (
-        <ul data-testid="content-list" className="flex flex-col gap-6">
-          {items.map((entry) => (
-            <li
-              key={entry.slug}
-              data-testid="content-card"
-              className="border-b border-zinc-200 pb-6 dark:border-zinc-800"
-            >
-              <article>
-                <p className="text-xs text-zinc-500">
-                  <time dateTime={entry.frontmatter.date}>
-                    {entry.frontmatter.date}
-                  </time>
-                  {" · "}
-                  {COLLECTION_LABEL[entry.collection]}
-                  {" · "}
-                  読了目安 {entry.readingTimeMinutes} 分
-                </p>
-                <h2 className="mt-1 text-lg font-semibold">
-                  <Link
-                    href={`/${entry.collection}/${entry.slug}`}
-                    className="underline-offset-4 hover:underline"
-                  >
-                    {entry.frontmatter.title}
-                  </Link>
-                </h2>
-                <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
-                  {entry.frontmatter.summary}
-                </p>
-                {entry.frontmatter.tags.length > 0 && (
-                  <ul className="mt-3 flex flex-wrap gap-2 text-xs text-zinc-500">
-                    {entry.frontmatter.tags.map((t) => (
-                      <li key={t} className="rounded border px-2 py-0.5">
-                        {t}
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </article>
-            </li>
-          ))}
-        </ul>
-      )}
-
-      <div className="mt-8" data-testid="pagination">
-        {hasNextPage ? (
-          <Link
-            data-testid="load-more-link"
-            href={buildHref(collection, { tag, page: page + 1 })}
-            className="inline-block rounded border border-zinc-300 px-4 py-2 text-sm dark:border-zinc-700"
-          >
-            もっと見る
-          </Link>
-        ) : (
-          totalItems > 0 && (
-            <p data-testid="content-end" className="text-sm text-zinc-500">
-              これで全部です。
-            </p>
-          )
-        )}
-      </div>
+      ) : <InfiniteContentList key={`${collection}:${tag ?? "all"}:${data.page}`} collection={collection} initialData={data} />}
     </div>
   );
 }
