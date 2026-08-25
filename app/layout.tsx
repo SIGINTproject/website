@@ -1,6 +1,7 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Link from "next/link";
+import { ServiceWorkerUpdate } from "@/lib/pwa/service-worker-update";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -14,13 +15,19 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  applicationName: "SIGINT",
+  manifest: "/manifest.webmanifest",
   title: {
     default: "SIGINT | ネットワーク研究会",
     template: "%s | SIGINT",
   },
   description:
     "芝浦工業大学ネットワーク研究会 SIGINT の公式サイト。実機を用いたネットワーク学習、部室ネットワークの設計・運用、対外連携について発信しています。",
+  appleWebApp: { capable: true, statusBarStyle: "default", title: "SIGINT" },
+  formatDetection: { telephone: false },
 };
+
+export const viewport: Viewport = { themeColor: "#18181b" };
 
 const NAV_LINKS = [
   { href: "/about", label: "私たちについて" },
@@ -38,6 +45,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
+        <ServiceWorkerUpdate />
         <a
           href="#main-content"
           className="sr-only focus:not-sr-only focus:absolute focus:left-2 focus:top-2 focus:z-50 focus:rounded focus:bg-black focus:px-4 focus:py-2 focus:text-white"
