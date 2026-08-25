@@ -1,17 +1,28 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import Link from "next/link";
+import { BIZ_UDPGothic, IBM_Plex_Sans, IBM_Plex_Sans_Condensed } from "next/font/google";
+
 import { ServiceWorkerUpdate } from "@/lib/pwa/service-worker-update";
+import { SiteFooter, SiteHeader } from "@/components/ui";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const bodyJapanese = BIZ_UDPGothic({
+  variable: "--font-body-ja",
+  weight: ["400", "700"],
   subsets: ["latin"],
+  display: "swap",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const bodyLatin = IBM_Plex_Sans({
+  variable: "--font-body-latin",
   subsets: ["latin"],
+  display: "swap",
+});
+
+const headingLatin = IBM_Plex_Sans_Condensed({
+  variable: "--font-heading-latin",
+  weight: ["400", "600"],
+  subsets: ["latin"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -29,20 +40,13 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = { themeColor: "#18181b" };
 
-const NAV_LINKS = [
-  { href: "/about", label: "私たちについて" },
-  { href: "/activities", label: "活動記録" },
-  { href: "/blog", label: "技術ブログ" },
-  { href: "/network", label: "部室ネットワーク" },
-  { href: "/join", label: "入部案内" },
-  { href: "/contact", label: "お問い合わせ" },
-];
-
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="ja"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      data-scroll-behavior="smooth"
+      className={`${bodyJapanese.variable} ${bodyLatin.variable} ${headingLatin.variable} h-full antialiased`}
+      style={{ "--font-heading-ja": "var(--font-body-ja)" } as React.CSSProperties}
     >
       <body className="min-h-full flex flex-col">
         <ServiceWorkerUpdate />
@@ -53,48 +57,13 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           本文へスキップ
         </a>
 
-        {/*
-          TODO(design): SiteHeader is a placeholder. The design workstream
-          (components/ui/) owns the final header, incl. mobile drawer nav.
-        */}
-        <header className="border-b border-zinc-200 dark:border-zinc-800">
-          <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-4 px-4 py-4 sm:px-6">
-            <Link href="/" className="text-lg font-bold tracking-tight">
-              SIGINT
-            </Link>
-            <nav aria-label="グローバルナビゲーション">
-              <ul className="flex flex-wrap gap-x-6 gap-y-2 text-sm">
-                {NAV_LINKS.map((link) => (
-                  <li key={link.href}>
-                    <Link
-                      href={link.href}
-                      className="underline-offset-4 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
-                    >
-                      {link.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </nav>
-          </div>
-        </header>
+        <SiteHeader />
 
         <main id="main-content" className="flex flex-1 flex-col">
           {children}
         </main>
 
-        {/* TODO(design): SiteFooter is a placeholder. */}
-        <footer className="border-t border-zinc-200 py-8 text-sm text-zinc-500 dark:border-zinc-800">
-          <div className="mx-auto max-w-5xl px-4 sm:px-6">
-            <p>
-              &copy; {new Date().getFullYear()} ネットワーク研究会 SIGINT
-              （芝浦工業大学）
-            </p>
-            <p className="mt-1">
-              TODO(sigint): 顧問名・正式な団体所在地・連絡先はここに追記する。
-            </p>
-          </div>
-        </footer>
+        <SiteFooter />
       </body>
     </html>
   );

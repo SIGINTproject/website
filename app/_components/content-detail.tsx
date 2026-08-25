@@ -1,8 +1,8 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
 
 import { getEntryBySlug, type ContentCollection } from "@/lib/content";
+import { Breadcrumb, Tag, VlanTrunkLine } from "@/components/ui";
 
 const COLLECTION_LABEL: Record<ContentCollection, string> = {
   activities: "活動記録",
@@ -25,18 +25,11 @@ export function ContentDetail({
   const entry = getDetailEntry(collection, slug);
 
   return (
-    <article className="mx-auto w-full max-w-3xl px-4 py-12 sm:px-6">
-      <p className="text-sm">
-        <Link
-          href={`/${collection}`}
-          className="underline-offset-4 hover:underline"
-        >
-          &larr; {COLLECTION_LABEL[collection]}一覧へ戻る
-        </Link>
-      </p>
+    <article className="mx-auto w-full max-w-reading px-5 py-12 sm:px-8 lg:py-20">
+      <Breadcrumb items={[{ label: COLLECTION_LABEL[collection], href: `/${collection}` }, { label: entry.frontmatter.title }]} />
 
-      <header className="mt-4">
-        <p className="text-xs text-zinc-500">
+      <header className="mt-8 border-b border-line pb-10">
+        <p className="font-label text-xs tracking-wide text-muted">
           <time dateTime={entry.frontmatter.date}>
             {entry.frontmatter.date}
           </time>
@@ -45,16 +38,15 @@ export function ContentDetail({
           {" · "}
           読了目安 {entry.readingTimeMinutes} 分
         </p>
-        <h1 className="mt-2 text-3xl font-bold">{entry.frontmatter.title}</h1>
+        <h1 className="mt-4 text-title">{entry.frontmatter.title}</h1>
         {entry.frontmatter.tags.length > 0 && (
-          <ul className="mt-3 flex flex-wrap gap-2 text-xs text-zinc-500">
+          <ul className="mt-5 flex flex-wrap gap-2">
             {entry.frontmatter.tags.map((tag) => (
-              <li key={tag} className="rounded border px-2 py-0.5">
-                {tag}
-              </li>
+              <li key={tag}><Tag>{tag}</Tag></li>
             ))}
           </ul>
         )}
+        <div className="mt-8"><VlanTrunkLine label="ARTICLE" /></div>
       </header>
 
       {/*
@@ -62,7 +54,7 @@ export function ContentDetail({
         owns typography (headings, lists, links) via styles/ or an MDX
         component map — do not add ad-hoc classes here.
       */}
-      <div className="mt-8">
+      <div className="prose-sigint mt-10">
         <MDXRemote source={entry.source} />
       </div>
     </article>

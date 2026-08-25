@@ -1,0 +1,110 @@
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body-ja), var(--font-body-latin), sans-serif;
+  line-height: 1.8;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-heading-ja), var(--font-heading-latin), sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-wrap: balance;
+}
+
+a,
+button,
+summary {
+  -webkit-tap-highlight-color: transparent;
+}
+
+:where(a, button, summary, input, select, textarea):focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--signal) 24%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+.prose-sigint {
+  color: var(--ink);
+  font-size: 1rem;
+  line-height: 1.9;
+}
+
+.prose-sigint > * + * {
+  margin-top: 1.5rem;
+}
+
+.prose-sigint :is(h2, h3) {
+  border-top: 1px solid var(--line);
+  padding-top: 2rem;
+}
+
+.prose-sigint h2 {
+  margin-top: 4rem;
+  font-size: 1.5rem;
+}
+
+.prose-sigint h3 {
+  margin-top: 3rem;
+  font-size: 1.25rem;
+}
+
+.prose-sigint :is(ul, ol) {
+  padding-left: 1.5rem;
+}
+
+.prose-sigint ul {
+  list-style: square;
+}
+
+.prose-sigint ol {
+  list-style: decimal;
+}
+
+.prose-sigint a {
+  color: var(--signal);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.22em;
+}
+
+.prose-sigint code {
+  border: 1px solid var(--line);
+  background: var(--surface);
+  padding: 0.1em 0.35em;
+  font-size: 0.9em;
+}
+
+.prose-sigint pre {
+  overflow-x: auto;
+  border-left: 3px solid var(--signal);
+  background: var(--surface);
+  padding: 1.25rem;
+}
+
+.prose-sigint pre code {
+  border: 0;
+  background: transparent;
+  padding: 0;
+}

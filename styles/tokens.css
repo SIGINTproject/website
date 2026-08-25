@@ -1,0 +1,66 @@
+:root {
+  color-scheme: light dark;
+  --paper: #f7f9fa;
+  --surface: #ffffff;
+  --ink: #14242e;
+  --muted: #52636d;
+  --line: #ccd6db;
+  --signal: #00677f;
+  --signal-contrast: #ffffff;
+  --focus: #00677f;
+
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-24: 6rem;
+  --space-32: 8rem;
+
+  --radius-control: 0.125rem;
+  --content-width: 75rem;
+  --reading-width: 42rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #0d171d;
+    --surface: #14242e;
+    --ink: #eef4f6;
+    --muted: #aebdc4;
+    --line: #41535d;
+    --signal: #63c5db;
+    --signal-contrast: #071216;
+    --focus: #7dd3e5;
+  }
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-surface: var(--surface);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-signal: var(--signal);
+  --color-signal-contrast: var(--signal-contrast);
+  --color-focus: var(--focus);
+
+  --font-sans: var(--font-body-ja), var(--font-body-latin), sans-serif;
+  --font-heading: var(--font-heading-ja), var(--font-heading-latin), sans-serif;
+  --font-label: var(--font-heading-latin), var(--font-heading-ja), sans-serif;
+
+  --text-display: clamp(2.5rem, 7vw, 4.5rem);
+  --text-display--line-height: 1.08;
+  --text-title: clamp(2rem, 4vw, 3.25rem);
+  --text-title--line-height: 1.16;
+
+  --spacing-18: 4.5rem;
+  --spacing-22: 5.5rem;
+  --spacing-30: 7.5rem;
+  --max-width-site: var(--content-width);
+  --max-width-reading: var(--reading-width);
+  --radius-control: var(--radius-control);
+}
