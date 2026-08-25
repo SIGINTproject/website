@@ -18,9 +18,7 @@ export default function ContactPage() {
 
       <ContentRails className="mt-12 max-w-reading mx-auto">
         <section className="border border-dashed border-line bg-surface p-6 text-sm text-muted">
-          TODO(sigint): お問い合わせフォームは外部サービス（Google フォーム等）
-          に委譲する方針。フォームのURL確定後、ここに埋め込みリンクを設置する。
-          代替の連絡先（メールアドレス・SNSアカウント等）があれば併記する。
+          お問い合わせフォームは作成中です。お問い合わせはXのDMからお願いいたします。
         </section>
       </ContentRails>
     </div>

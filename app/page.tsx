@@ -5,16 +5,16 @@ import { ButtonLink, Card, CardLabel } from "@/components/ui";
 
 const PILLARS = [
   {
-    title: "実機で学ぶネットワーク基礎",
-    body: "座学だけでなく、実際のスイッチ・ルータに触れながらネットワークの基礎を学ぶカリキュラムを1年生向けに実施しています。",
+    title: "実機で学ぶネットワーク",
+    body: "座学だけでなく、実際のスイッチ・ルータに触れながらネットワークの基礎を学ぶことを大切にしています。",
   },
   {
     title: "部室ネットワークの設計・運用",
-    body: "マルチVLAN、VyOSによるルーティング、デュアルWAN、SNMP監視、NetBoxによるIPAM・資産管理、Asteriskによる内線など、実運用のネットワークを自分たちで設計・運用しています。",
+    body: "学内、学外で学んだ知識をもとにサークルのネットワークを自分たちで設計・運用していク予定です。",
   },
   {
-    title: "対外連携・将来のAS運用",
-    body: "学内イベントのWiFi支援や、他大学・社会人との技術的な交流に加え、将来的なAS運用・ピアリングも見据えて活動しています。",
+    title: "対外接続・AS運用",
+    body: "将来的には学内学外イベントのWiFi支援や、AS運用・ピアリングを目標して活動しています。",
   },
 ];
 
@@ -35,10 +35,9 @@ export default async function HomePage() {
           </div>
           <div className="px-5 py-14 sm:px-8 sm:py-20 lg:px-16 lg:py-24">
           <p className="font-label text-xs font-semibold uppercase tracking-[0.16em] text-muted">Network Study Group</p>
-          <h1 className="mt-5 max-w-4xl text-display">ネットワークを、<br />自分たちの手で。</h1>
+          <h1 className="mt-5 max-w-4xl text-display">SIGINT</h1>
           <p className="mt-8 max-w-reading text-base leading-8 text-muted sm:text-lg">
-            芝浦工業大学のネットワーク研究会です。未経験の1年生から実機を触りながら学び、
-            部室ネットワークの設計・運用を自分たちの手で行っています。
+            芝浦工業大学のネットワーク研究会SIGINT(シグイント)です。ネットワーク技術を中心に様々な技術を学び、使うサークルです。
           </p>
           <div className="mt-10 flex flex-wrap gap-3">
             <ButtonLink href="/join">入部案内を見る <span aria-hidden="true">→</span></ButtonLink>

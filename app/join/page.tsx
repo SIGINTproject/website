@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 const FAQ = [
   {
     q: "ネットワークの知識が全くありませんが大丈夫ですか？",
-    a: "大丈夫です。1年生の多くは未経験からのスタートで、実機を使ったカリキュラムで基礎から学べます。",
+    a: "大丈夫です。ネットワークの知識だけでなくプログラミング等の知識も不問です。一緒に勉強しましょう！",
   },
   {
     q: "他学科・他学年でも入部できますか？",
@@ -37,16 +37,14 @@ export default function JoinPage() {
       <section className="mt-12 border-t border-line pt-8">
         <h2 className="text-2xl">活動日</h2>
         <p className="mt-4 border-l-2 border-signal pl-4 text-sm text-muted">
-          TODO(sigint): 実際の活動曜日・時間・場所（部室の号室等）を確認のうえ
-          掲載する。
+          自由
         </p>
       </section>
 
       <section className="mt-12 border-t border-line pt-8">
         <h2 className="text-2xl">見学方法</h2>
         <p className="mt-4 border-l-2 border-signal pl-4 text-sm text-muted">
-          TODO(sigint): 見学の申し込み方法（当日訪問可否、事前連絡の要否、
-          連絡先）を確認のうえ掲載する。当面は
+          XのアカウントへのDM、または
           <Link href="/contact" className="text-signal underline underline-offset-4">
             お問い合わせ
           </Link>

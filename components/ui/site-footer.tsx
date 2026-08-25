@@ -20,7 +20,7 @@ export function SiteFooter() {
                 <li><Link className="hover:text-signal" href="/contact">お問い合わせ</Link></li>
               </ul>
             </nav>
-            <p className="text-xs leading-6 text-muted">TODO(sigint): 顧問名・正式な団体所在地・連絡先はここに追記する。</p>
+            <p className="text-xs leading-6 text-muted">X : SIGINT@sigint179</p>
           </div>
         </div>
         <p className="mt-10 border-t border-line pt-5 font-label text-xs tracking-wide text-muted">

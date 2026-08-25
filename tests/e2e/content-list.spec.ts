@@ -6,8 +6,12 @@ test("無限スクロールで追加読込し、末尾と重複なしを確認�
   const initialCount = await cards.count();
   expect(initialCount).toBeGreaterThan(0);
 
-  await page.getByTestId("load-more-link").scrollIntoViewIfNeeded();
-  await expect.poll(() => cards.count()).toBeGreaterThan(initialCount);
+  // 追加読込を可能な限り行う（fixture件数がPAGE_SIZE未満でも壊れないようにする）。
+  while ((await page.getByTestId("load-more-link").count()) > 0) {
+    const previousCount = await cards.count();
+    await page.getByTestId("load-more-link").scrollIntoViewIfNeeded();
+    await expect.poll(() => cards.count()).toBeGreaterThan(previousCount);
+  }
   await expect(page.getByTestId("content-end")).toHaveText("これで全部です。");
 
   const hrefs = await cards.locator("h2 a").evaluateAll((links) =>
