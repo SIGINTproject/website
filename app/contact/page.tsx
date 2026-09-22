@@ -18,10 +18,7 @@ export default function ContactPage() {
 
       <ContentRails className="mt-12 max-w-reading mx-auto">
         <section className="border border-dashed border-line bg-surface p-6 text-sm text-muted">
-          <p>
-            お問い合わせフォームは作成中です。以下のX（DM）またはメールから
-            お願いいたします。
-          </p>
+          <p>以下のX（DM）またはメールからお願いいたします。</p>
           <dl className="mt-4 space-y-2">
             <div className="flex gap-2">
               <dt className="font-semibold text-ink">X</dt>
