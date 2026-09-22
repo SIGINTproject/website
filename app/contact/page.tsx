@@ -18,7 +18,36 @@ export default function ContactPage() {
 
       <ContentRails className="mt-12 max-w-reading mx-auto">
         <section className="border border-dashed border-line bg-surface p-6 text-sm text-muted">
-          お問い合わせフォームは作成中です。お問い合わせはXのDMからお願いいたします。
+          <p>
+            お問い合わせフォームは作成中です。以下のX（DM）またはメールから
+            お願いいたします。
+          </p>
+          <dl className="mt-4 space-y-2">
+            <div className="flex gap-2">
+              <dt className="font-semibold text-ink">X</dt>
+              <dd>
+                <a
+                  href="https://x.com/sigint179"
+                  className="text-signal underline underline-offset-4"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  @sigint179
+                </a>
+              </dd>
+            </div>
+            <div className="flex gap-2">
+              <dt className="font-semibold text-ink">Mail</dt>
+              <dd>
+                <a
+                  href="mailto:contact@sigint179.net"
+                  className="text-signal underline underline-offset-4"
+                >
+                  contact@sigint179.net
+                </a>
+              </dd>
+            </div>
+          </dl>
         </section>
       </ContentRails>
     </div>

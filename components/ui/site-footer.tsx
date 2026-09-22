@@ -20,7 +20,19 @@ export function SiteFooter() {
                 <li><Link className="hover:text-signal" href="/contact">お問い合わせ</Link></li>
               </ul>
             </nav>
-            <p className="text-xs leading-6 text-muted">X : SIGINT@sigint179</p>
+            <p className="text-xs leading-6 text-muted">
+              X :{" "}
+              <a
+                href="https://x.com/sigint179"
+                className="hover:text-signal"
+                target="_blank"
+                rel="noreferrer"
+              >
+                @sigint179
+              </a>
+              <br />
+              Mail : <a href="mailto:contact@sigint179.net" className="hover:text-signal">contact@sigint179.net</a>
+            </p>
           </div>
         </div>
         <p className="mt-10 border-t border-line pt-5 font-label text-xs tracking-wide text-muted">
